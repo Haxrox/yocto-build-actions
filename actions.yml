@@ -1,0 +1,69 @@
+name: "Yocto Build"
+description: "Builds a project using Yocto"
+inputs:
+  init-command:
+    description: "Command to initialize the repository"
+    default: "cd poky && source oe-init-build-env"
+  bake-command:
+    description: "Command to initialize the build"
+    default: "bitbake core-image-sato"
+    required: true
+  deploy-dir:
+    description: "Yocto deploy directory"
+    default: "poky/build/tmp/"
+  build-dir:
+    description: "Yocto build directory"
+    default: "poky/build"
+  tmp-dir:
+    description: "Yocto tmp directory"
+    default: "poky/build/tmp/deploy/images"
+  sstate-cache-dir:
+    description: "Yocto sstate-cache directory"
+    default: "poky/build/sstate-cache"
+  image-name:
+    description: "Image to build"
+    default: "core-image-sato"
+    required: true
+  pre-command:
+    description: "Command to run before baking"
+    default: ""
+  wks_file:
+    description: "Openembedded kickstart file"
+    default: null
+
+runs:
+  steps:
+    - name: Setup Yocto environment
+      run: |
+        sudo apt install -y gawk wget git diffstat unzip texinfo gcc build-essential chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev python3-subunit mesa-common-dev zstd liblz4-tool file locales libacl1
+        sudo locale-gen en_US.UTF-8
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Initialize yocto environment
+      env:
+        YOCTO_INIT_COMMAND: ${{ inputs.init-command }}
+      run: |
+        echo "Running `${YOCTO_INIT_COMMAND}`"
+        ${YOCTO_INIT_COMMAND}
+    - name: Creating sstate-cache
+      env:
+        SSTATE_CACHE_DIR: ${{ inputs.sstate-cache-dir }}
+      run: |
+        echo "sstate-cache directory: ${SSTATE_CACHE_DIR}"
+        echo "Currently unsupported, responsible for fetching from GitHub artifactory"
+    - name: Baking project
+      env:
+        PRE-COMMAND: ${{ inputs.pre-command }}
+        BAKE-COMMAND: ${{ inputs.bake-command }}
+      run: |
+        echo "Running: `${PRE-COMMAND} && ${BAKE-COMMAND}`"
+        ${PRE-COMMAND} && ${BAKE-COMMAND}
+    - name: Saving sstate-cache artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: sstate-cache
+        path: ${{ inputs.sstate-cache-dir }}
+    - name: Saving deploy artifact
+      uses: actions/upload-artifact@v4
+        name: deploy
+        path: ${{ inputs.deploy-dir }}
