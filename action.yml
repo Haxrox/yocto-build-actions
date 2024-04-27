@@ -34,24 +34,28 @@ inputs:
 runs:
   steps:
     - name: Setup Yocto environment
+      shell: bash
       run: |
         sudo apt install -y gawk wget git diffstat unzip texinfo gcc build-essential chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev python3-subunit mesa-common-dev zstd liblz4-tool file locales libacl1
         sudo locale-gen en_US.UTF-8
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Initialize yocto environment
+      shell: bash
       env:
         YOCTO_INIT_COMMAND: ${{ inputs.init-command }}
       run: |
         echo "Running `${YOCTO_INIT_COMMAND}`"
         ${YOCTO_INIT_COMMAND}
     - name: Creating sstate-cache
+      shell: bash
       env:
         SSTATE_CACHE_DIR: ${{ inputs.sstate-cache-dir }}
       run: |
         echo "sstate-cache directory: ${SSTATE_CACHE_DIR}"
         echo "Currently unsupported, responsible for fetching from GitHub artifactory"
     - name: Baking project
+      shell: bash
       env:
         PRE-COMMAND: ${{ inputs.pre-command }}
         BAKE-COMMAND: ${{ inputs.bake-command }}
