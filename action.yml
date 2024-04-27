@@ -58,11 +58,11 @@ runs:
     - name: Baking project
       shell: bash
       env:
-        PRE-COMMAND: ${{ inputs.pre-command }}
-        BAKE-COMMAND: ${{ inputs.bake-command }}
+        PRE_COMMAND: ${{ inputs.pre-command }}
+        BAKE_COMMAND: ${{ inputs.bake-command }}
       run: |
-        echo "Running: `${PRE-COMMAND} && ${BAKE-COMMAND}`"
-        ([[ -n ${PRE-COMMAND} ]] && ${PRE-COMMAND}) && ${BAKE-COMMAND}
+        echo "Running: `${PRE_COMMAND} && ${BAKE_COMMAND}`"
+        ([[ -n ${PRE_COMMAND} ]] && ${PRE_COMMAND}) && ${BAKE_COMMAND}
     - name: Saving sstate-cache artifact
       uses: actions/upload-artifact@v4
       with:
