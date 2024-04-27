@@ -4,9 +4,9 @@ inputs:
   init-command:
     description: "Command to initialize the repository"
     default: "cd poky && source oe-init-build-env"
-  bake-command:
-    description: "Command to initialize the build"
-    default: "bitbake core-image-sato"
+  bitbake-command:
+    description: "Command to bitbake"
+    default: "bitbake"
     required: true
   deploy-dir:
     description: "Yocto deploy directory"
@@ -49,23 +49,19 @@ runs:
         YOCTO_INIT_COMMAND: ${{ inputs.init-command }}
         SSTATE_CACHE_DIR: ${{ inputs.sstate-cache-dir }}
         PRE_COMMAND: ${{ inputs.pre-command }}
-        BAKE_COMMAND: ${{ inputs.bake-command }}
+        BITBAKE_COMMAND: ${{ inputs.bitbake-command }}
         IMAGE_NAME: ${{ inputs.image-name }}
       run: |
         echo "Running `${YOCTO_INIT_COMMAND}`"
         ${YOCTO_INIT_COMMAND}
         echo "Fetching sstate-cache (gh artifactory). Currently unsupported"
         echo "sstate-cache directory: ${SSTATE_CACHE_DIR}"
-        # echo "Baking image: `$([[ -n ${PRE_COMMAND} ]] && echo '${PRE_COMMAND} &&') ${BAKE_COMMAND}`"
-        # ([[ -n ${PRE_COMMAND} ]] && ${PRE_COMMAND}) && ${BAKE_COMMAND}
         echo "Running pre-command: ${PRE_COMMAND}"
         ${PRE_COMMAND}
-        which bitbake
-        bitbake --help
-        echo "Bitbake -n"
-        bitbake -n ${IMAGE_NAME}
-        echo "Running bake command: ${BAKE_COMMAND}"
-        ${BAKE_COMMMAND} && echo "Done"
+        which ${BITBAKE_COMMAND}
+        ${BITBAKE_COMMAND} --help
+        echo "Running bake command: ${BITBAKE_COMMAND} ${IMAGE_NAME}"
+        ${BITBAKE_COMMAND} ${IMAGE_NAME} && echo "Done"
     - name: Saving sstate-cache artifact
       uses: actions/upload-artifact@v4
       with:
