@@ -61,6 +61,7 @@ runs:
         ${PRE_COMMAND}
         which bitbake
         bitbake --help
+        bitbake -n
         echo "Running bake command: ${BAKE_COMMAND}"
         ${BAKE_COMMMAND} && echo "Done"
     - name: Saving sstate-cache artifact
