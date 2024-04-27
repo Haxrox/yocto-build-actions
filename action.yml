@@ -53,7 +53,7 @@ runs:
         ${YOCTO_INIT_COMMAND}
         echo "Fetching sstate-cache (gh artifactory). Currently unsupported"
         echo "sstate-cache directory: ${SSTATE_CACHE_DIR}"
-        echo "Baking image: `$([[ -n ${PRE_COMMAND} ]] && echo ${PRE_COMMAND} &&) ${BAKE_COMMAND}`"
+        echo "Baking image: `$([[ -n ${PRE_COMMAND} ]] && echo '${PRE_COMMAND} &&') ${BAKE_COMMAND}`"
         ([[ -n ${PRE_COMMAND} ]] && ${PRE_COMMAND}) && ${BAKE_COMMAND}
     - name: Saving sstate-cache artifact
       uses: actions/upload-artifact@v4
