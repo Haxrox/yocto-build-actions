@@ -58,7 +58,7 @@ runs:
         echo "Running pre-command: ${PRE_COMMAND}"
         ${PRE_COMMAND}
         echo "Running bake command: ${BAKE_COMMAND}"
-        ${BAKE_COMMMAND}
+        ${BAKE_COMMMAND} && echo "Done"
     - name: Saving sstate-cache artifact
       uses: actions/upload-artifact@v4
       with:
