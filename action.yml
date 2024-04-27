@@ -41,6 +41,8 @@ runs:
         sudo locale-gen en_US.UTF-8
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
     - name: Setup and build yocto image
       shell: bash
       env:
@@ -58,6 +60,7 @@ runs:
         echo "Running pre-command: ${PRE_COMMAND}"
         ${PRE_COMMAND}
         which bitbake
+        bitbake --help
         echo "Running bake command: ${BAKE_COMMAND}"
         ${BAKE_COMMMAND} && echo "Done"
     - name: Saving sstate-cache artifact
