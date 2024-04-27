@@ -62,7 +62,7 @@ runs:
         BAKE-COMMAND: ${{ inputs.bake-command }}
       run: |
         echo "Running: `${PRE-COMMAND} && ${BAKE-COMMAND}`"
-        ${PRE-COMMAND} && ${BAKE-COMMAND}
+        ([[ -n ${PRE-COMMAND} ]] && ${PRE-COMMAND}) && ${BAKE-COMMAND}
     - name: Saving sstate-cache artifact
       uses: actions/upload-artifact@v4
       with:
