@@ -41,26 +41,18 @@ runs:
         sudo locale-gen en_US.UTF-8
     - name: Checkout repository
       uses: actions/checkout@v4
-    - name: Initialize yocto environment
+    - name: Setup and build yocto image
       shell: bash
       env:
         YOCTO_INIT_COMMAND: ${{ inputs.init-command }}
-      run: |
-        echo "Running `${YOCTO_INIT_COMMAND}`"
-        ${YOCTO_INIT_COMMAND}
-    - name: Creating sstate-cache
-      shell: bash
-      env:
         SSTATE_CACHE_DIR: ${{ inputs.sstate-cache-dir }}
-      run: |
-        echo "sstate-cache directory: ${SSTATE_CACHE_DIR}"
-        echo "Currently unsupported, responsible for fetching from GitHub artifactory"
-    - name: Baking project
-      shell: bash
-      env:
         PRE_COMMAND: ${{ inputs.pre-command }}
         BAKE_COMMAND: ${{ inputs.bake-command }}
       run: |
+        echo "Running `${YOCTO_INIT_COMMAND}`"
+        ${YOCTO_INIT_COMMAND}
+        echo "sstate-cache directory: ${SSTATE_CACHE_DIR}"
+        echo "Currently unsupported, responsible for fetching from GitHub artifactory"
         echo "Running: `${PRE_COMMAND} && ${BAKE_COMMAND}`"
         ([[ -n ${PRE_COMMAND} ]] && ${PRE_COMMAND}) && ${BAKE_COMMAND}
     - name: Saving sstate-cache artifact
