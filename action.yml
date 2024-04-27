@@ -69,5 +69,6 @@ runs:
         path: ${{ inputs.sstate-cache-dir }}
     - name: Saving deploy artifact
       uses: actions/upload-artifact@v4
+      with:
         name: deploy
         path: ${{ inputs.deploy-dir }}
